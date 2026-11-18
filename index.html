@@ -387,8 +387,8 @@ td .grupo-botones .boton{margin-top:0}
   - abejandraDice: dato curioso contado por Abejandra.
   - aporteAbejandra y explicacionAporte: qué le da el árbol a ella (y al juego).
   - requerimientos y usos: condiciones que necesita y para qué se usa.
-  - audioMp3: opcional. Si pones un enlace a un MP3 grabado, se usa en lugar
-    de la voz automática.
+  - audioMp3: audio grabado (carpeta "audios" del repositorio). Si se deja "",
+    se usa la voz automática del navegador.
 */
 const especies = {
 
@@ -418,7 +418,7 @@ const especies = {
     aporteAbejandra: "refugio",   // "alimento" (néctar o polen) o "refugio" (sombra y protección)
     explicacionAporte: "No da flores sino conos, así que no tiene néctar para mí. Sus hojas rígidas sirven, eso sí, de percha para descansar.",
     fotos: ["palmafunebre_1", "palmafunebre_2", "palmafunebre_3"],
-    audioMp3: ""
+    audioMp3: "audios/palma_funebre.m4a"
   },
 
   liquidambar: {
@@ -447,7 +447,7 @@ const especies = {
     aporteAbejandra: "refugio",   // "alimento" (néctar o polen) o "refugio" (sombra y protección)
     explicacionAporte: "Sus flores son discretas y las poliniza el viento, pero su copa amplia me da sombra y refugio en los días de sol.",
     fotos: ["liquidambar_1", "liquidambar_2", "liquidambar_3"],
-    audioMp3: ""
+    audioMp3: "audios/liquidambar.m4a"
   },
 
   pino_cipres: {
@@ -476,7 +476,7 @@ const especies = {
     aporteAbejandra: "refugio",   // "alimento" (néctar o polen) o "refugio" (sombra y protección)
     explicacionAporte: "No tiene flores, tiene conos. Pero sus ramas densas protegen del viento a muchos animales… ¡y a mí también!",
     fotos: ["pino_cipres_1", "pino_cipres_2", "pino_cipres_3"],
-    audioMp3: ""
+    audioMp3: "audios/pino_cipres.m4a"
   },
 
   papayuelo: {
@@ -505,7 +505,7 @@ const especies = {
     aporteAbejandra: "alimento",   // "alimento" (néctar o polen) o "refugio" (sombra y protección)
     explicacionAporte: "Sus flores tienen néctar y polen, y los insectos polinizadores como yo las visitamos.",
     fotos: ["papayuelo_1", "papayuelo_2", "papayuelo_3"],
-    audioMp3: ""
+    audioMp3: "audios/papayuelo.m4a"
   },
 
   hayuelo: {
@@ -534,7 +534,7 @@ const especies = {
     aporteAbejandra: "refugio",   // "alimento" (néctar o polen) o "refugio" (sombra y protección)
     explicacionAporte: "Sus flores son pequeñas y el viento hace casi todo el trabajo de polinizarlas; para mí es más bien un buen escondite.",
     fotos: ["hayuelo_1", "hayuelo_2", "hayuelo_3"],
-    audioMp3: ""
+    audioMp3: "audios/hayuelo.m4a"
   },
 
   bignea_rosa: {
@@ -563,7 +563,7 @@ const especies = {
     aporteAbejandra: "alimento",   // "alimento" (néctar o polen) o "refugio" (sombra y protección)
     explicacionAporte: "Sus flores en forma de campana guardan néctar para colibríes e insectos. ¡Una parada obligada en mi recorrido!",
     fotos: ["", "", ""],   // ← FALTAN: pon aquí "bignea_rosa_1", "bignea_rosa_2", "bignea_rosa_3"
-    audioMp3: ""
+    audioMp3: "audios/bignea_rosa.m4a"
   }
 };
 
@@ -1732,7 +1732,7 @@ const puntosKML = [
         if (!actual) return;
         const e = especies[actual];
         if (e.audioMp3) {
-          if (!mp3 || mp3.dataset.especie !== actual) { api.detener(); mp3 = new Audio(e.audioMp3); mp3.dataset.especie = actual; mp3.onended = () => { estado = "detenido"; avisar("Audio terminado."); }; }
+          if (!mp3 || mp3.dataset.especie !== actual) { api.detener(); mp3 = new Audio(e.audioMp3); mp3.dataset.especie = actual; mp3.onended = () => { estado = "detenido"; avisar("Audio terminado."); }; mp3.onerror = () => { estado = "detenido"; avisar("No se pudo cargar el audio grabado."); }; }
           mp3.playbackRate = api.velocidad; mp3.play(); estado = "reproduciendo"; avisar("Reproduciendo audio grabado…"); return;
         }
         if (!sintesis) return;
